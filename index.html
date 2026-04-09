@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>临海市文化馆"有艺来临"2026年第一期成人免费公益课</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 10px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #3498db, #2c3e50);
+            color: white;
+            padding: 20px 15px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 1.5em;
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+
+        .header .subtitle {
+            font-size: 0.95em;
+            opacity: 0.9;
+        }
+
+        .current-date-info {
+            background: rgba(255,255,255,0.2);
+            padding: 8px 12px;
+            border-radius: 8px;
+            margin-top: 12px;
+            font-size: 0.85em;
+            display: inline-block;
+        }
+
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            background: #f8f9fa;
+            padding: 10px 5px;
+            border-bottom: 1px solid #eee;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .nav-tab {
+            padding: 8px 12px;
+            background: white;
+            border: 2px solid #3498db;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            color: #3498db;
+            font-size: 0.85em;
+            flex: 1;
+            min-width: 80px;
+            text-align: center;
+        }
+
+        .nav-tab.active {
+            background: #3498db;
+            color: white;
+        }
+
+        .content {
+            padding: 15px;
+            overflow-x: auto;
+        }
+
+        .day-group {
+            margin-bottom: 20px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .day-group.expired {
+            opacity: 0.6;
+        }
+
+        .day-header {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            padding: 12px 15px;
+            font-size: 1.1em;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .day-group.expired .day-header {
+            background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+        }
+
+        .day-group.today .day-header {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+        }
+
+        .expired-badge, .today-badge {
+            background: rgba(0,0,0,0.3);
+            padding: 2px 8px;
+            border-radius: 8px;
+            font-size: 0.75em;
+        }
+
+        .courses-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            font-size: 0.85em;
+        }
+
+        .courses-table th {
+            background: #f8f9fa;
+            padding: 10px 8px;
+            text-align: left;
+            font-weight: 600;
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            font-size: 0.9em;
+        }
+
+        .courses-table td {
+            padding: 10px 8px;
+            border-bottom: 1px solid #eee;
+            vertical-align: middle;
+        }
+
+        .courses-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .course-name {
+            font-weight: bold;
+            color: #2c3e50;
+            display: block;
+        }
+
+        .expired-course {
+            text-decoration: line-through;
+            color: #999 !important;
+        }
+
+        .course-time {
+            color: #3498db;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+
+        .course-location {
+            color: #7f8c8d;
+            font-size: 0.85em;
+            line-height: 1.4;
+        }
+
+        .course-requirement {
+            color: #e74c3c;
+            font-size: 0.8em;
+            line-height: 1.4;
+        }
+
+        .course-people {
+            color: #666;
+            font-size: 0.85em;
+        }
+
+        /* 勾选框样式 */
+        .checkbox-cell {
+            text-align: center;
+            width: 50px;
+        }
+
+        .course-checkbox {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: #3498db;
+        }
+
+        .footer {
+            background: #2c3e50;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 0.85em;
+        }
+
+        .footer-note {
+            background: #34495e;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 10px;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+
+        /* 已完成课程的样式 */
+        .completed-row {
+            background-color: #f0f8ff !important;
+        }
+
+        .completed-row .course-name {
+            color: #2ecc71 !important;
+        }
+
+        /* 手机端特定样式 */
+        @media (max-width: 768px) {
+            body { padding: 5px; }
+            .header h1 { font-size: 1.3em; }
+            .header .subtitle { font-size: 0.85em; }
+            .nav-tabs { padding: 8px 3px; }
+            .nav-tab { padding: 6px 8px; font-size: 0.75em; min-width: 70px; }
+            .content { padding: 10px; }
+            .day-header { padding: 10px 12px; font-size: 1em; }
+            .courses-table { font-size: 0.8em; min-width: 500px; }
+            .courses-table th, .courses-table td { padding: 8px 5px; }
+            .table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+            .checkbox-cell { width: 40px; }
+            .course-checkbox { width: 18px; height: 18px; }
+        }
+
+        @media (max-width: 380px) {
+            .header h1 { font-size: 1.1em; }
+            .nav-tab { font-size: 0.7em; padding: 5px 6px; min-width: 60px; }
+            .courses-table { font-size: 0.75em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>临海市文化馆"有艺来临"</h1>
+            <p class="subtitle">2026年第一期成人免费公益课</p>
+            <div class="current-date-info">
+                💡 当前：<span id="currentDateDisplay"></span>
+            </div>
+        </div>
+
+        <div class="nav-tabs">
+            <div class="nav-tab active" onclick="showWeek(1)">第1周</div>
+            <div class="nav-tab" onclick="showWeek(2)">第2周</div>
+            <div class="nav-tab" onclick="showWeek(3)">第3周</div>
+            <div class="nav-tab" onclick="showWeek(4)">第4周</div>
+        </div>
+
+        <div class="content" id="course-content"></div>
+
+        <div class="footer">
+            <p>临海市文化馆 | 咨询电话：0576-XXXXXXX</p>
+            <div class="footer-note">
+                📌 通用要求：18-60周岁，无特殊疾病。部分课程需自备材料或在老师指导下购买。<br>
+                ✅ 勾选框：点击勾选标记已完成课程，数据会保存在本地。
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function getCurrentDate() { return new Date(); }
+
+        function updateCurrentDateDisplay() {
+            const now = getCurrentDate();
+            const month = now.getMonth() + 1;
+            const day = now.getDate();
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            document.getElementById('currentDateDisplay').textContent =
+                `${month}月${day}日 ${hours}:${minutes}`;
+        }
+
+        // 课程数据 - 已修复瑜伽课（周二和周四都有）
+        const coursesByDay = {
+            "周一": [
+                { name: "手机摄影", time: "19:00-20:30", location: "湖景国际香榭丽7-3摄影工作室", requirement: "18-60周岁,无特殊疾病", people: 15, date: new Date(2026, 3, 6) },
+                { name: "书法", time: "19:00-20:30", location: "台运学谷广场校区五楼", requirement: "18-60周岁,无特殊疾病", people: 16, date: new Date(2026, 3, 6) },
+                { name: "爵士舞", time: "18:30-20:00", location: "O2舞蹈工作室", requirement: "18-60周岁,无特殊疾病;服装、鞋子自备", people: 16, date: new Date(2026, 3, 6) },
+                { name: "绳编", time: "19:00-20:30", location: "文化馆213", requirement: "18-60周岁,无特殊疾病;耗材费30元/人", people: 12, date: new Date(2026, 3, 13) }
+            ],
+            "周二": [
+                { name: "化妆", time: "18:30-20:10", location: "文化馆213", requirement: "18-60周岁,无特殊疾病;化妆用品自备", people: 16, date: new Date(2026, 3, 7) },
+                { name: "瑜伽", time: "19:00-20:00", location: "黛米瑜伽", requirement: "18-60周岁,无特殊疾病", people: 25, date: new Date(2026, 3, 7) },
+                { name: "八段锦", time: "19:00-20:30", location: "灵湖体育馆", requirement: "18-60周岁,无特殊疾病;服装、鞋子自备", people: 30, date: new Date(2026, 3, 7) }
+            ],
+            "周三": [
+                { name: "非洲鼓", time: "18:30-20:00", location: "九拍音乐", requirement: "18-60周岁,无特殊疾病;乐器自备", people: 15, date: new Date(2026, 3, 8) },
+                { name: "数据分析 DeepSeek", time: "18:30-20:00", location: "育杰职业技能培训学校", requirement: "18-60周岁,无特殊疾病", people: 20, date: new Date(2026, 3, 8) },
+                { name: "肩悦时光", time: "18:00-19:30", location: "抱一琴馆", requirement: "18-60周岁,无特殊疾病;有瑜伽基础", people: 10, date: new Date(2026, 3, 8) }
+            ],
+            "周四": [
+                { name: "吉他", time: "19:00-20:30", location: "欧雅艺术", requirement: "18-60周岁,无特殊疾病;乐器自备", people: 15, date: new Date(2026, 3, 9) },
+                { name: "瑜伽", time: "19:00-20:00", location: "黛米瑜伽", requirement: "18-60周岁,无特殊疾病", people: 25, date: new Date(2026, 3, 9) },
+                { name: "芭蕾", time: "18:30-20:00", location: "舞匠", requirement: "18-60周岁,无特殊疾病;服装、鞋子自备", people: 10, date: new Date(2026, 3, 16) }
+            ],
+            "周五": [
+                { name: "3D浮雕画", time: "18:30-20:00", location: "文化馆213", requirement: "18-60周岁,无特殊疾病;材料工具自购", people: 15, date: new Date(2026, 3, 10) },
+                { name: "古典舞", time: "19:00-20:30", location: "耀达大厦1501", requirement: "18-60周岁,无特殊疾病;服装、鞋子自备", people: 30, date: new Date(2026, 3, 10) },
+                { name: "鸡尾酒", time: "19:00-20:30", location: "Z11楼顶咖啡", requirement: "18-60周岁,无特殊疾病;耗材费50元/人", people: 15, date: new Date(2026, 3, 10) }
+            ],
+            "周六": [
+                { name: "古琴", time: "14:30-16:00", location: "抱一琴馆", requirement: "18-60周岁,无特殊疾病;乐器自备", people: 10, date: new Date(2026, 3, 11) }
+            ],
+            "周日": [
+                { name: "油画", time: "18:30-20:00", location: "小矮凳书画", requirement: "18-60周岁,无特殊疾病", people: 12, date: new Date(2026, 3, 12) },
+                { name: "拉丁舞", time: "19:00-20:30", location: "零8拉丁", requirement: "18-60周岁,无特殊疾病;服装、鞋子自备", people: 15, date: new Date(2026, 3, 12) },
+                { name: "沙画", time: "19:00-20:30", location: "文化馆213", requirement: "18-60周岁,无特殊疾病;老师提供工具", people: 6, date: new Date(2026, 3, 12) },
+                { name: "女子塑形", time: "18:30-20:30", location: "东珏女子塑形", requirement: "18-60周岁,无特殊疾病", people: 8, date: new Date(2026, 3, 12) }
+            ]
+        };
+
+        const daysOfWeek = ["周一", "周二", "周三", "周四", "周五", "周六", "周日"];
+
+        function getCompletedCourses() {
+            const completed = localStorage.getItem('completedCourses');
+            return completed ? JSON.parse(completed) : {};
+        }
+
+        function saveCompletedCourses(completed) {
+            localStorage.setItem('completedCourses', JSON.stringify(completed));
+        }
+
+        function getCourseId(courseName, date) {
+            return `${courseName}_${date.getFullYear()}_${date.getMonth()}_${date.getDate()}`;
+        }
+
+        function getDateForDay(weekNumber, dayIndex) {
+            const baseDate = new Date(2026, 3, 6);
+            const daysToAdd = (weekNumber - 1) * 7 + dayIndex;
+            const targetDate = new Date(baseDate);
+            targetDate.setDate(baseDate.getDate() + daysToAdd);
+            return targetDate;
+        }
+
+        function formatDate(date) {
+            return `${date.getMonth() + 1}月${date.getDate()}日`;
+        }
+
+        function isBeforeApril30(date) {
+            const april30 = new Date(2026, 3, 30);
+            return date <= april30;
+        }
+
+        function isExpired(date) {
+            const now = getCurrentDate();
+            const nowDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            const courseDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+            return courseDate < nowDate;
+        }
+
+        function isToday(date) {
+            const now = getCurrentDate();
+            return date.getDate() === now.getDate() &&
+                   date.getMonth() === now.getMonth() &&
+                   date.getFullYear() === now.getFullYear();
+        }
+
+        function handleCheckboxClick(courseId) {
+            const completed = getCompletedCourses();
+            const checkbox = document.getElementById(`checkbox_${courseId}`);
+
+            if (checkbox.checked) {
+                completed[courseId] = true;
+            } else {
+                delete completed[courseId];
+            }
+
+            saveCompletedCourses(completed);
+
+            const row = document.getElementById(`row_${courseId}`);
+            if (row) {
+                if (checkbox.checked) {
+                    row.classList.add('completed-row');
+                } else {
+                    row.classList.remove('completed-row');
+                }
+            }
+        }
+
+        function showWeek(weekNumber) {
+            document.querySelectorAll('.nav-tab').forEach((tab, index) => {
+                tab.classList.toggle('active', index + 1 === weekNumber);
+            });
+
+            const contentDiv = document.getElementById('course-content');
+            const completed = getCompletedCourses();
+            let html = '';
+
+            const maxDays = weekNumber === 4 ? 4 : 7;
+
+            for (let dayIndex = 0; dayIndex < maxDays; dayIndex++) {
+                const day = daysOfWeek[dayIndex];
+                const courses = coursesByDay[day];
+
+                if (courses && courses.length > 0) {
+                    const targetDate = getDateForDay(weekNumber, dayIndex);
+
+                    if (!isBeforeApril30(targetDate)) {
+                        continue;
+                    }
+
+                    const dateStr = formatDate(targetDate);
+                    const isDayExpired = isExpired(targetDate);
+                    const isDayToday = isToday(targetDate);
+
+                    let dayClass = '';
+                    let badge = '';
+
+                    if (isDayToday) {
+                        dayClass = 'today';
+                        badge = '<span class="today-badge">今天</span>';
+                    } else if (isDayExpired) {
+                        dayClass = 'expired';
+                        badge = '<span class="expired-badge">已过期</span>';
+                    }
+
+                    html += `
+                        <div class="day-group ${dayClass}">
+                            <div class="day-header">
+                                <span>${day} ${dateStr}</span>
+                                ${badge}
+                            </div>
+                            <div class="table-wrapper">
+                                <table class="courses-table">
+                                    <thead>
+                                        <tr>
+                                            <th class="checkbox-cell">完成</th>
+                                            <th width="20%">课程</th>
+                                            <th width="15%">时间</th>
+                                            <th width="12%">人数</th>
+                                            <th width="25%">地点</th>
+                                            <th width="15%">要求</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>`;
+
+                    courses.forEach(course => {
+                        const courseId = getCourseId(course.name, course.date);
+                        const isCompleted = completed[courseId] || false;
+
+                        const courseExpired = isExpired(course.date);
+                        const nameClass = courseExpired ? 'expired-course' : '';
+                        const rowClass = isCompleted ? 'completed-row' : '';
+
+                        html += `
+                            <tr id="row_${courseId}" class="${rowClass}">
+                                <td class="checkbox-cell">
+                                    <input type="checkbox"
+                                           id="checkbox_${courseId}"
+                                           class="course-checkbox"
+                                           ${isCompleted ? 'checked' : ''}
+                                           onchange="handleCheckboxClick('${courseId}')">
+                                </td>
+                                <td>
+                                    <span class="course-name ${nameClass}">${course.name}</span>
+                                </td>
+                                <td>
+                                    <span class="course-time ${nameClass}">${course.time}</span>
+                                </td>
+                                <td>
+                                    <span class="course-people ${nameClass}">${course.people}人</span>
+                                </td>
+                                <td>
+                                    <span class="course-location ${nameClass}">${course.location}</span>
+                                </td>
+                                <td>
+                                    <span class="course-requirement ${nameClass}">${course.requirement}</span>
+                                </td>
+                            </tr>`;
+                    });
+
+                    html += `</tbody></table></div></div>`;
+                }
+            }
+
+            contentDiv.innerHTML = html;
+        }
+
+        function init() {
+            updateCurrentDateDisplay();
+            showWeek(1);
+            setInterval(function() {
+                updateCurrentDateDisplay();
+                const activeTab = document.querySelector('.nav-tab.active');
+                const weekNumber = Array.from(document.querySelectorAll('.nav-tab')).indexOf(activeTab) + 1;
+                showWeek(weekNumber);
+            }, 60000);
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>
